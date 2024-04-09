@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-
+using namespace std;
 class Chip8
 {
 public:
@@ -8,6 +8,23 @@ public:
     void LoadRom(char const *filename);
 
 private:
+    default_random_engine randGen;
+    uniform_int_distribution<uint8_t> randByte;
+
+    uint8_t registers[16]{};
+    uint8_t memory[4096]{};
+    uint16_t index{};
+    uint16_t pc{};
+    uint16_t stack[16]{};
+    uint8_t sp{};
+    uint8_t soundTimer{};
+    uint8_t delayTimer{};
+    uint8_t inputKeys[16]{};
+    uint32_t video[64 * 32]{};
+    uint16_t opcode{};
+
+    //! Intruction Sets Functions
+
     // Do nothing
     void OP_NULL();
 
@@ -112,16 +129,4 @@ private:
 
     // LD Vx, [I]
     void OP_Fx65();
-
-    uint8_t registers[16]{};
-    uint8_t memory[4096]{};
-    uint16_t index{};
-    uint16_t pc{};
-    uint16_t stack[16]{};
-    uint8_t sp{};
-    uint8_t soundTimer{};
-    uint8_t delayTimer{};
-    uint8_t inputKeys[16]{};
-    uint32_t video[64 * 32]{};
-    uint16_t opcode{};
 };
