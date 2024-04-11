@@ -7,6 +7,7 @@ class Chip8
 public:
     Chip8();
     void LoadRom(char const *filename);
+    void Cycle();
 
 private:
     default_random_engine randGen;

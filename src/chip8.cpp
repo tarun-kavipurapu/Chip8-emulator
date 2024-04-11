@@ -95,11 +95,26 @@ Chip8::Chip8()
     table8[0x6] = &Chip8::OP_8xy6;
     table8[0x7] = &Chip8::OP_8xy7;
     table8[0xE] = &Chip8::OP_8xyE;
+    srand(static_cast<unsigned int>(std::time(nullptr)));
 }
 
-Chip8::Chip8()
+//////////////////////////////////////////////////////
+void Chip8::Cycle()
 {
-    srand(static_cast<unsigned int>(std::time(nullptr)));
+    // decode and ffetch is hanndled bu the opcode fucntions but now we nneed to code the fetch functionality
+    opcode = (memory[pc] << 8u | memory[pc + 1]);
+    // chip is 16bit system first we take 8bit from memory and left shift it 8 places and insert the next 8 bits from its next location memory[pc+1] and insert it after its position
+    pc = pc + 2;
+    // decodde and execute
+    ((this)->*(table[(opcode & 0xF000u) >> 12u]))();
+    if (delayTimer > 0)
+    {
+        delayTimer--;
+    }
+    if (soundTimer > 0)
+    {
+        soundTimer--;
+    }
 }
 
 void Chip8::LoadRom(char const *filename)
@@ -130,20 +145,20 @@ void Chip8::LoadRom(char const *filename)
 //! Function pointers
 void Chip8::Table0()
 {
-    ((*this).*(table0[opcode & 0x000Fu]))();
+    ((this)->*(table0[opcode & 0x000Fu]))();
 }
 void Chip8::TableE()
 {
-    ((*this).*(tableE[opcode & 0x000Fu]))();
+    (this->*(tableE[opcode & 0x000Fu]))();
 }
 
 void Chip8::TableF()
 {
-    ((*this).*(tableF[opcode & 0x000Fu]))();
+    (this->*(tableF[opcode & 0x000Fu]))();
 }
 void Chip8::Table8()
 {
-    ((*this).*(table8[opcode & 0x000Fu]))();
+    (this->*(table8[opcode & 0x000Fu]))();
 }
 /// @brief ////////////////////////////
 //! OPcode implementation
