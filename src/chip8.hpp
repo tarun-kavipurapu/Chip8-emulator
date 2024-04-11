@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 using namespace std;
+
 class Chip8
 {
 public:
@@ -22,11 +23,29 @@ private:
     uint8_t inputKeys[16]{};
     uint32_t video[64 * 32]{};
     uint16_t opcode{};
+    const unsigned int VIDEO_HEIGHT = 32;
+    const unsigned int VIDEO_WIDTH = 64;
+
+    // tables
+
+    void Table0();
+    void Table8();
+    void TableE();
+    void TableF();
+
+    typedef void (Chip8::*Chip8Func)();
+
+    Chip8Func table[0xF + 1];
+    Chip8Func table0[0xE + 1];
+    Chip8Func table8[0xE + 1];
+    Chip8Func tableE[0xE + 1];
+    Chip8Func tableF[0x65 + 1];
 
     //! Intruction Sets Functions
 
     // Do nothing
-    void OP_NULL();
+    void
+    OP_NULL();
 
     // CLS
     void OP_00E0();
